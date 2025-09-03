@@ -1,0 +1,76 @@
+ALGORITHMS OVERVIEW 
+
+1. Deep Deterministic Policy Gradient (DDPG)
+   • Actor‑Critic method for continuous action spaces.
+   • Actor network μ(s|θ^μ) outputs continuous action vector a (neighbor weights, block size, block interval).
+   • Critic network Q(s,a|θ^Q) evaluates value of state–action pair.
+   • Uses soft target updates and exploration noise.
+
+2. Parameterized DQN (P‑DQN)
+   • Extends the classic DQN to mixed discrete + continuous actions.
+   • Discrete head selects among K neighbor‐sampling strategies.
+   • Separate “parameter networks” output continuous sub‐actions (block params).
+   • ε‑greedy for discrete choice; continuous actions follow parameter nets.
+
+3. Prioritized Experience Replay
+   • Store transitions (s, a, r, s′, done) with priority ∝ |TD_error|.
+   • Sample minibatches weighted by priority to focus on “surprising” experiences.
+   • Apply importance‐sampling correction when updating.
+
+4. SimPy Discrete‐Event Simulation
+   • Models peer network: transaction arrivals, block mining, message delays.
+   • Exposes `reset()` and `step(action)` interface:
+       – reset() → initial state vector.
+       – step(a)  → executes gossip+block params, advances time, returns (s′, r, done, info).
+
+PSEUDOCODE 
+
+1. SETUP
+env     = SimPyEnvironment()             # network simulator  
+agent   = DDPG_Agent(state_dim, action_dim)  # or P_DQN_Agent(...)  
+replay  = PrioritizedReplayBuffer(capacity=100_000, α=0.6, β=0.4)  
+metrics = MetricsTracker()  
+
+2. MAIN TRAINING LOOP
+for episode in 1…N_episodes:
+    s ← env.reset()
+    done ← False
+
+    while not done:
+        2.1 Observe
+        state = s
+
+        2.2 Decide (actor or P‑DQN)
+        action = agent.select_action(state)
+          └─ neighbors_mask
+          └─ block_size
+          └─ block_interval
+
+        2.3 Execute
+        next_s, reward, done, info = env.step(action)
+
+        2.4 Store
+        replay.add(state, action, reward, next_s, done)
+
+        2.5 Learn
+        batch = replay.sample(batch_size=64)
+        agent.learn(batch)
+
+        2.6 Track
+        metrics.record(reward, info)
+
+        s = next_s
+
+        2.7 End‑of‑episode housekeeping
+        agent.update_target_networks()
+        agent.decay_exploration_noise()
+
+3. EVALUATION
+for scenario in eval_scenarios:
+    stats = env.run_without_learning(agent.policy, scenario)
+    metrics.evaluate(stats)
+
+4. PLOTTING
+metrics.plot_learning_curve()           # Reward vs. episode
+metrics.plot_throughput_vs_latency()    # Throughput vs. confirmation latency
+metrics.plot_orphan_rate_over_time()    # Orphan block rate trend

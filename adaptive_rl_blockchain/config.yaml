@@ -1,0 +1,24 @@
+num_peers: 5
+latency_range: [1.0, 10.0]
+bandwidth: 100.0
+max_time: 1000.0
+
+alpha: 0.1
+beta: 0.01
+gamma: 0.5
+
+orphan_factor: 0.05
+max_block_size: 10.0
+max_interval: 5.0
+
+episodes: 100
+buffer_size: 5000
+batch_size: 64
+
+lr_actor: 0.0001
+lr_critic: 0.001
+discount: 0.99 
+tau: 0.005
+noise_scale: 0.2
+
+mempool_threshold: 20

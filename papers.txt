@@ -1,0 +1,24 @@
+Reference Papers (Post‑2020)
+1.AdaChain: A Learned Adaptive Blockchain (Nov 2022)
+Wu et al. present an RL approach to switch among permissioned‑chain architectures for throughput optimization 
+arxiv.org
+
+
+2.Dynamic Sharding via P‑DQN/BDQBS (Dec 2022)
+Zhang et al. tackle continuous/discrete action spaces to optimize shard count, block size, interval via DRL 
+mdpi.com
+
+
+3.Joint MEC‑Blockchain via DDPG (Apr 2022)
+Li et al. use DDPG at each edge node to jointly optimize block interval and power offloading, maximizing throughput under latency constraints 
+mdpi.com
+
+
+4.Enhanced RL‑Based Resource Scheduling in IIoT (May 2025)
+Garg et al. integrate RL for dynamic resource scheduling in blockchain‑fog IIoT, showing superior latency and security performance 
+icck.org
+
+
+5.MRL‑PoS: Multi‑Agent RL for PoS (Dec 2023)
+Islam et al. propose a multi‑agent RL consensus layer that adapts stake‑based parameters to defeat malicious behavior 
+arxiv.org
